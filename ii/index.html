@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="only light">
+<meta name="theme-color" content="#f7f1e6">
+<title>Кыз узатуу — Айшоола</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Marck+Script&display=swap" rel="stylesheet">
+<style>
+:root{--milk:#fdfaf4;--cream:#f7f1e6;--sand:#efe5d2;--champ:#e4d5b7;--gold:#b49a62;--gold-d:#8f7843;--wine:#7a2430;--ink:#4a3f38;--soft:#7d7167;
+--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+--script:"Marck Script","Cormorant Garamond",Georgia,serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:only light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--sand);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0 auto;max-width:440px;overflow-x:hidden;background:var(--cream);color:var(--ink);font-family:var(--serif);font-size:19px;line-height:1.65;box-shadow:0 0 40px rgba(120,100,60,.12)}
+section{position:relative;padding:64px 28px;text-align:center}
+.wrap{max-width:380px;margin:0 auto}
+h1,h2{font-weight:500;margin:0;font-style:italic;letter-spacing:.01em}
+.small{font-size:14px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:var(--gold-d)}
+.line{width:48px;height:1px;background:var(--gold);margin:22px auto;opacity:.8}
+.rv{opacity:0;transition:opacity 1.2s ease}
+.rv.in{opacity:1}
+.nojs .rv{opacity:1}
+
+/* ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА */
+#lang{position:fixed;z-index:1100;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;display:flex;border:1px solid var(--champ);border-radius:20px;background:rgba(253,250,244,.92);overflow:hidden;box-shadow:0 2px 8px rgba(100,80,40,.1)}
+#lang button{font:inherit;font-size:14px;font-weight:600;letter-spacing:.12em;color:var(--soft);background:none;border:0;padding:6px 13px;cursor:pointer;transition:background .2s,color .2s}
+#lang button[aria-pressed=true]{background:var(--wine);color:var(--milk)}
+#lang button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+
+/* МУЗЫКА */
+#mus{position:fixed;left:auto;top:auto;-webkit-transform:translateZ(0);transform:translateZ(0);z-index:1100;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:42px;height:42px;border-radius:50%;border:1px solid var(--gold);background:rgba(253,250,244,.92);color:var(--gold-d);display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:0 2px 8px rgba(100,80,40,.12);-webkit-tap-highlight-color:transparent;transition:background .35s,color .35s,border-color .35s}
+#mus svg{width:18px;height:18px}
+#mus.playing{background:var(--wine);border-color:var(--wine);color:var(--milk)}
+#mus.playing:after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px solid var(--gold);opacity:.55;animation:ring 2.8s ease-out infinite}
+@keyframes ring{0%{transform:scale(.9);opacity:.6}100%{transform:scale(1.25);opacity:0}}
+#mus:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#mus.hidden{display:none}
+
+/* HERO */
+.hero{background:var(--milk);padding:76px 28px 72px}
+.bride{width:min(62vw,250px);margin:0 auto 34px;display:none}
+.bride.loaded{display:block}
+.bride .frame{padding:7px;border:1px solid var(--champ);border-radius:999px 999px 6px 6px;background:var(--milk)}
+.bride .ph{overflow:hidden;border-radius:999px 999px 3px 3px;aspect-ratio:3/4;background:var(--sand)}
+.bride img{width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block}
+.hero h1{font-size:clamp(46px,14vw,60px);line-height:1.1;margin:14px 0 4px;color:var(--wine)}
+.hdate{margin-top:6px;font-size:20px;line-height:1.6}
+.hdate b{font-weight:600}
+
+.paper{background:var(--cream)}
+.paper h2{font-size:clamp(30px,8.5vw,36px);color:var(--wine);line-height:1.2}
+.paper p{margin:0 0 16px}
+.sign{font-style:italic;color:var(--soft);margin-top:26px!important}
+.sign b{display:block;font-weight:500;font-size:24px;color:var(--wine);margin-top:2px}
+
+.cdsec{padding:0;background:var(--sand)}
+.tphoto{width:100%;height:min(66vw,280px);display:none;background:var(--champ)}
+.tphoto.loaded{display:block}
+.tphoto img{width:100%;height:100%;object-fit:cover;display:block}
+.cdbody{padding:52px 16px 56px}
+.cdbody h2{font-size:clamp(32px,9vw,38px);color:var(--wine);margin:8px 0 0}
+.cd{display:flex;justify-content:center;width:100%;margin-top:6px}
+.cd>div{flex:1 1 0;min-width:0;position:relative}
+.cd>div+div:before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--champ)}
+.cd b{display:block;font-weight:500;font-size:clamp(30px,9vw,40px);line-height:1.1;font-variant-numeric:tabular-nums lining-nums}
+.cd span{display:block;margin-top:4px;font-size:clamp(11px,3vw,13px);letter-spacing:.1em;color:var(--gold-d)}
+.tdate{margin-top:26px;font-size:17px;font-style:italic;color:var(--soft)}
+
+.venue{background:var(--milk)}
+.venue h2{font-size:clamp(26px,7.4vw,31px);color:var(--wine);margin:14px 0 22px;line-height:1.25}
+.vname{font-size:25px;font-weight:600;line-height:1.25}
+.vcity{font-size:18px;color:var(--soft);font-style:italic}
+.btn{display:inline-block;cursor:pointer;background:transparent;color:var(--wine);font:inherit;font-weight:600;font-size:17px;letter-spacing:.05em;padding:11px 30px;border:1px solid var(--wine);border-radius:2px;text-decoration:none;margin-top:22px;transition:background .25s,color .25s}
+.btn:hover,.btn:focus-visible{background:var(--wine);color:var(--milk);outline:none}
+
+.rsvp{background:var(--cream)}
+.rsvp h2{font-size:clamp(28px,8vw,34px);color:var(--wine);margin:12px 0 28px;line-height:1.25}
+form{text-align:left;background:var(--milk);border:1px solid var(--champ);border-radius:4px;padding:26px 22px 28px}
+label{display:block;font-size:17px;font-weight:500;margin:20px 0 8px}
+form>label:first-child{margin-top:0}
+input[type=text],select{width:100%;font:inherit;font-size:17px;padding:11px 12px;border:1px solid var(--champ);border-radius:2px;background:#fff;color:var(--ink);outline:none;transition:border-color .2s}
+input[type=text]:focus,select:focus{border-color:var(--gold)}
+.opts{display:flex;gap:10px}
+.opts label{flex:1;margin:0;border:1px solid var(--champ);border-radius:2px;padding:11px 8px;text-align:center;cursor:pointer;font-size:16px;line-height:1.3;transition:all .2s}
+.opts input{display:none}
+.opts label:has(input:checked){border-color:var(--wine);color:var(--wine);background:#fbf1f1}
+#err{color:#a3262f;font-size:15px;min-height:20px;margin-top:10px}
+#ok{display:none;text-align:center;font-size:24px;font-style:italic;color:var(--wine);padding:30px 10px}
+
+/* ФУТЕР: ФОТО + ЖҮРӨК + КОЛ ЖАЗУУ */
+footer{position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:min(112vw,500px);padding:64px 26px calc(64px + env(safe-area-inset-bottom,0px));background:#3d1119;color:#fff}
+footer .fbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;pointer-events:none}
+footer:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(74,12,24,.55) 0%,rgba(58,10,20,.72) 100%)}
+footer .heart{width:76px;height:76px;border:1px solid #ecdcaa;border-radius:50%;display:grid;place-items:center;margin-bottom:34px}
+footer .heart svg{width:40px;height:40px}
+footer .ft{font-family:var(--script);font-size:clamp(34px,10.4vw,46px);line-height:1.3;font-weight:400;color:#fff;margin:0;text-shadow:0 2px 12px rgba(40,6,14,.45)}
+
+/* ===== СТАРТОВЫЙ ЭКРАН: КОНВЕРТ ===== */
+html.locked,html.locked body{overflow:hidden;height:100%;overscroll-behavior:none}
+body.pre>section,body.pre>footer{opacity:0}
+body.reveal>section,body.reveal>footer{transition:opacity .9s ease}
+#intro{position:fixed;left:0;top:0;width:100%;height:100vh;height:100dvh;z-index:1000;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none;-webkit-user-select:none;outline:none;background:linear-gradient(180deg,#f8f2e6,#f1e8d6)}
+#intro .body{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#intro .flap{position:absolute;left:0;right:0;top:0;height:54%;transform-origin:50% 0;transform:perspective(1200px) rotateX(0deg);filter:drop-shadow(0 6px 8px rgba(100,80,40,.22))}
+#intro .flap svg{width:100%;height:100%;display:block}
+#intro .seal{--s:min(22vw,92px);position:absolute;left:50%;top:54%;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);filter:drop-shadow(0 3px 5px rgba(90,65,20,.3))}
+#intro .seal svg{width:100%;height:100%;display:block}
+#intro .hint{position:absolute;left:0;right:0;top:calc(54% + min(11vw,46px) + 30px);display:flex;align-items:center;justify-content:center;gap:14px;color:var(--gold-d);font-style:italic;font-size:clamp(17px,4.6vw,20px);letter-spacing:.06em;animation:hintPulse 2.8s ease-in-out infinite}
+#intro .hint:before,#intro .hint:after{content:"";width:26px;height:1px;background:var(--gold);opacity:.7}
+@keyframes hintPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes sealOut{30%{transform:scale(1.07)}to{transform:scale(.6) translateY(-8px);opacity:0}}
+@keyframes flapOpen{to{transform:perspective(1200px) rotateX(178deg)}}
+@keyframes introOut{to{transform:scale(1.06);opacity:0}}
+#intro.open{cursor:default;animation:introOut .8s ease-in 1.3s forwards}
+#intro.open .hint{animation:none;opacity:0;transition:opacity .25s}
+#intro.open .seal{animation:sealOut .45s ease-in forwards}
+#intro.open .flap{animation:flapOpen .6s cubic-bezier(.45,.05,.3,1) .3s forwards}
+#intro .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+#intro.has-img .body,#intro.has-img .flap,#intro.has-img .seal{display:none}
+#intro.has-img .hint{top:auto;bottom:calc(9vh + env(safe-area-inset-bottom,0px))}
+#intro.has-img.open{animation-delay:.25s}
+@media (prefers-reduced-motion:reduce){#intro.open,#intro.open *{animation-duration:.01s!important;animation-delay:0s!important}.rv{opacity:1;transition:none}.hint{animation:none}#mus.playing:after{animation:none}}
+</style>
+<style id="lux">
+:root{--goldg:linear-gradient(110deg,#9a8049 0%,#e9d9a6 28%,#b49a62 50%,#f3e7be 72%,#9a8049 100%);--gl:#e9d9a6;--deep:#5c1823;
+--tex:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .4 0 0 0 0 .25 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+body section[class]{background-image:var(--tex)}
+@keyframes shim{to{background-position:-200% 0}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+@keyframes flip{from{opacity:0;transform:translateY(-8px)}}
+@keyframes glint{50%{filter:brightness(1.14) saturate(1.1)}}
+.rv{transform:translateY(14px);transition:opacity 1.2s ease,transform 1.2s ease}
+.rv.in,.nojs .rv{transform:none}
+.line{width:96px;height:1px;background:var(--goldg);background-size:200% 100%;animation:shim 7s linear infinite;opacity:1;position:relative}
+.line:after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;background:var(--gold);transform:translate(-50%,-50%) rotate(45deg)}
+.hn{display:block;width:140px;aspect-ratio:3;margin:0 auto;color:var(--gold)}
+.cn{position:absolute;width:44px;height:44px;color:var(--gold)}
+.cn.tl{left:8px;top:8px}.cn.tr{right:8px;top:8px;transform:scaleX(-1)}.cn.bl{left:8px;bottom:8px;transform:scaleY(-1)}.cn.br{right:8px;bottom:8px;transform:scale(-1)}
+#lang{background:var(--wine);border-color:var(--gold)}
+#lang button{color:var(--gl)}
+#lang button[aria-pressed=true]{background:var(--goldg);color:var(--wine)}
+#mus{width:40px;height:40px;right:10px;background:rgba(253,250,244,.88)}
+
+/* конверт */
+#intro:after{content:"";position:absolute;inset:0;background:var(--tex);pointer-events:none}
+#intro.has-img:after,#intro.has-img .emb,#intro.has-img .embc{display:none}
+.emb,.embc{position:absolute;pointer-events:none;color:#eadcb8;filter:drop-shadow(1px 1px 0 #fffcf4) drop-shadow(-1px -1px 0 rgba(140,110,60,.38))}
+.emb{left:50%;bottom:6.5vh;width:min(70vw,300px);aspect-ratio:3;transform:translateX(-50%)}
+.embc{width:min(22vw,90px);height:min(22vw,90px);bottom:2.5vh}
+.embc.l{left:4vw;transform:scaleY(-1)}.embc.r{right:4vw;transform:scale(-1)}
+#intro .seal svg{animation:glint 5s ease-in-out infinite}
+
+/* первый экран */
+.hero{padding:56px 28px 68px}
+.hero .hn{margin-bottom:26px}
+.bride .frame{padding:7px;border:0;background:var(--goldg);background-size:200% 100%;animation:shim 9s linear infinite;box-shadow:0 14px 34px rgba(120,90,40,.25)}
+.bride .ph{border:3px solid var(--milk)}
+.hero h1{font-family:var(--script);font-style:normal;font-weight:400;font-size:clamp(64px,20vw,88px);line-height:1.05;margin:12px 0 30px;text-shadow:0 1px 0 #fff,0 3px 14px rgba(180,154,98,.45)}
+.dbox{position:relative;max-width:280px;margin:0 auto;padding:30px 18px 26px;border:1px solid var(--gold);outline:1px solid var(--champ);outline-offset:5px}
+.dbox .cn{width:34px;height:34px}
+.hdate{margin:0}
+.hdate span{display:block;font-size:15px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-d);font-weight:600}
+.hdate b{display:block;font-size:68px;line-height:1;font-weight:500;color:var(--wine);margin:2px 0 4px}
+body.reveal .hero .wrap>*{animation:rise 1.3s cubic-bezier(.2,.7,.2,1) both}
+body.reveal .hero .wrap>:nth-child(2){animation-delay:.15s}body.reveal .hero .wrap>:nth-child(3){animation-delay:.3s}body.reveal .hero .wrap>:nth-child(4){animation-delay:.45s}body.reveal .hero .wrap>:nth-child(5){animation-delay:.6s}
+
+/* открытка */
+.paper{padding:44px 18px}
+.card{position:relative;padding:50px 24px 40px;background:var(--milk) var(--tex);border:1px solid var(--gold);box-shadow:inset 0 0 0 7px var(--milk),inset 0 0 0 8px var(--champ),0 16px 36px rgba(120,100,60,.16)}
+.card .cn{width:50px;height:50px}
+.card .hn{width:120px;margin:0 auto 16px}
+.card .hn.b{width:90px;margin:14px auto 0}
+.card .sign{margin-top:22px!important;margin-bottom:0!important}
+.par{font-family:var(--script);font-size:32px;line-height:1.25;color:var(--wine)}
+
+/* таймер */
+body .cdsec{background-color:var(--deep);color:var(--milk)}
+.tphoto{position:relative}
+.tphoto:after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(transparent,var(--deep))}
+.cdbody{padding:34px 16px 58px}
+.cdsec .small,.tdate{color:var(--gl)}
+.cdbody h2{color:var(--milk);font-family:var(--script);font-style:normal;font-weight:400;font-size:clamp(40px,12vw,50px)}
+.cd{gap:12px;margin-top:10px;padding:0 6px}
+.cd>div{border:1px solid var(--gold);outline:1px solid rgba(233,217,166,.25);outline-offset:3px;padding:14px 0 10px;background:rgba(255,255,255,.05)}
+.cd>div+div:before{display:none}
+.cd>div:not(:last-child):after{content:"";position:absolute;right:-9px;top:50%;width:5px;height:5px;background:var(--gold);transform:translateY(-50%) rotate(45deg)}
+.cd b{color:#f6ecd0;font-size:clamp(28px,8.4vw,38px)}
+.cd span{color:var(--gl)}
+.cd b.flip{animation:flip .5s ease}
+
+/* место */
+.pin{width:68px;height:68px;margin:0 auto 20px;border-radius:50%;border:1px solid var(--gold);outline:1px solid var(--champ);outline-offset:4px;display:grid;place-items:center;color:var(--gold-d)}
+.pin svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linejoin:round}
+.vname{font-family:var(--script);font-weight:400;font-size:clamp(32px,9.5vw,40px);color:var(--wine);line-height:1.2}
+.btn.gold,form .btn{background:var(--goldg);background-size:200% 100%;animation:shim 8s linear infinite;color:#4a1a1f;border-color:#a98d52;box-shadow:0 4px 14px rgba(150,120,60,.28)}
+.btn.gold:hover,form .btn:hover{background:var(--wine);color:var(--milk);animation:none}
+
+/* форма */
+form{border:1px solid var(--gold);padding:34px 26px 32px;box-shadow:inset 0 0 0 6px var(--milk),inset 0 0 0 7px var(--champ),0 12px 30px rgba(120,100,60,.12)}
+.opts label:has(input:checked){background:var(--wine);color:var(--milk);border-color:var(--wine)}
+@media (prefers-reduced-motion:reduce){.line,.btn,.bride .frame,#intro .seal svg,.cd b.flip{animation:none!important}body.reveal .hero .wrap>*{animation:none}.rv{transform:none}}
+
+/* программа вечера */
+body .prog{background-color:#f4ecdc}
+.prog h2{font-family:var(--script);font-style:normal;font-weight:400;font-size:clamp(40px,12vw,50px);color:var(--wine);margin:10px 0 0;line-height:1.2}
+.tl{position:relative;margin-top:30px;text-align:left}
+.tl:before{content:"";position:absolute;left:102px;top:26px;bottom:60px;width:1px;background:linear-gradient(var(--gold),var(--champ))}
+.tl .it{display:grid;grid-template-columns:62px 52px 1fr;column-gap:14px;padding-bottom:34px}
+.tl .it:last-child{padding-bottom:0}
+.tl time{font-weight:600;font-size:19px;letter-spacing:.04em;color:var(--wine);line-height:52px}
+.tl .ic{width:52px;height:52px;border-radius:50%;border:1px solid var(--gold);outline:1px solid var(--champ);outline-offset:3px;background:var(--milk);display:grid;place-items:center;color:var(--wine);position:relative}
+.tl .ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.tl h3{margin:4px 0 6px;font-weight:500;font-size:clamp(20px,5.6vw,23px);line-height:1.25;color:var(--wine)}
+.tl p{margin:0;font-size:17px;line-height:1.55;color:var(--soft)}
+
+/* ===== конверт: письмо внутри ===== */
+#intro .seal{filter:drop-shadow(0 6px 6px rgba(70,50,15,.38)) drop-shadow(0 1px 1px rgba(70,50,15,.5))}
+#intro .letter{position:absolute;left:50%;top:50%;width:min(74vw,310px);padding:28px 16px 26px;text-align:center;background:var(--milk) var(--tex);border:1px solid var(--gold);box-shadow:inset 0 0 0 5px var(--milk),inset 0 0 0 6px var(--champ),0 18px 40px rgba(90,65,20,.28);opacity:0;transform:translate(-50%,-30%) scale(.82);pointer-events:none}
+#intro.open .letter{animation:letterUp .8s cubic-bezier(.2,.8,.25,1) .55s forwards}
+@keyframes letterUp{to{opacity:1;transform:translate(-50%,-62%) scale(1)}}
+#intro.has-img .letter{display:none}
+#intro .letter .hn{width:90px;margin:0 auto 10px}
+.letter .lt{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-d);font-weight:600}
+.letter .ln{font-family:var(--script);font-size:clamp(46px,14vw,60px);line-height:1.1;color:var(--wine);margin:6px 0}
+.letter .ld{font-style:italic;color:var(--soft);font-size:17px}
+#intro.open .emb,#intro.open .embc{opacity:0;transition:opacity .4s}
+
+/* ===== особое пожелание и финал ===== */
+body .wish{background-color:#fbf7ee;padding:72px 30px 76px}
+.wish .cn,.fin .cn{width:58px;height:58px}
+.wish .cn.tl,.fin .cn.tl{left:14px;top:14px}.wish .cn.tr,.fin .cn.tr{right:14px;top:14px}.wish .cn.bl,.fin .cn.bl{left:14px;bottom:14px}.wish .cn.br,.fin .cn.br{right:14px;bottom:14px}
+.wish h2,.fin h2{font-family:var(--script);font-style:normal;font-weight:400;color:var(--wine);line-height:1.25}
+.wish h2{font-size:clamp(40px,12vw,50px);margin:10px 0 0}
+.wish p{font-style:italic;font-size:20px;line-height:1.7;margin:0 0 16px}
+.wish .par{margin-top:22px}
+
+/* ===== анимации при прокрутке ===== */
+@keyframes imgIn{from{opacity:0;transform:scale(1.1)}}
+@keyframes drift{50%{translate:0 -3px}}
+.hn{filter:drop-shadow(0 2px 2px rgba(150,120,60,.28));animation:drift 8s ease-in-out infinite}
+.rv,.rv.in{opacity:1;transform:none;transition:none}
+.rv>*,.rv .card>:not(.cn){opacity:0;transform:translateY(16px);transition:opacity 1.1s ease,transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.rv.in>*,.rv.in .card>:not(.cn){opacity:1;transform:none}
+.rv>.btn{transition:opacity 1.1s ease,transform 1.1s cubic-bezier(.2,.7,.2,1),background .25s,color .25s}
+.rv.in>:nth-child(2){transition-delay:0.12s}.rv.in>:nth-child(3){transition-delay:0.24s}.rv.in>:nth-child(4){transition-delay:0.36s}.rv.in>:nth-child(5){transition-delay:0.48s}.rv.in>:nth-child(6){transition-delay:0.60s}.rv.in>:nth-child(7){transition-delay:0.72s}.rv.in .card>:nth-child(5){transition-delay:0.08s}.rv.in .card>:nth-child(6){transition-delay:0.16s}.rv.in .card>:nth-child(7){transition-delay:0.24s}.rv.in .card>:nth-child(8){transition-delay:0.32s}.rv.in .card>:nth-child(9){transition-delay:0.40s}.rv.in .card>:nth-child(10){transition-delay:0.48s}.rv.in .card>:nth-child(11){transition-delay:0.56s}.rv.in .card>:nth-child(12){transition-delay:0.64s}
+.rv .cn,.wish .cn,.fin .cn{opacity:0;transition:opacity 1.6s .5s ease}
+.rv.in .cn,.wish.in .cn,.fin.in .cn{opacity:1}
+.tphoto img{opacity:0;transform:scale(1.08);transition:opacity 1.5s ease,transform 2s ease}
+.tphoto.in img{opacity:1;transform:none}
+body.reveal .bride img{animation:imgIn 1.8s ease .25s both}
+.nojs .rv>*,.nojs .rv .card>:not(.cn),.nojs .cn,.nojs .tphoto img{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv>*,.rv .card>:not(.cn),.rv .cn,.wish .cn,.fin .cn,.tphoto img{opacity:1!important;transform:none!important;transition:none!important}.hn{animation:none!important}body.reveal .bride img{animation:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="cn" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><path d="M3 61V20C3 10 10 3 20 3h41"/><path d="M10 54V22c0-8 4-12 12-12h32" opacity=".55"/><path d="M18 18c9 0 14 5 14 11s-6 9-10 6-2-8 2-8"/><path d="M18 18c0 9 5 14 11 14s9-6 6-10-8-2-8 2"/><circle cx="18" cy="18" r="1.7" fill="currentColor"/></symbol>
+<symbol id="hn" viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M60 6l5 14-5 14-5-14z"/><path d="M55 20c-9 0-13-6-21-6-8 0-12 6-9 11 3 4 9 3 10-1 1-3-2-5-4-4"/><path d="M65 20c9 0 13-6 21-6 8 0 12 6 9 11-3 4-9 3-10-1-1-3 2-5 4-4"/><path d="M21 20H5M99 20h16"/></symbol>
+</defs></svg>
+<div id="lang" role="group" aria-label="Тил / Язык">
+  <button type="button" data-l="ru" aria-pressed="false">RU</button>
+  <button type="button" data-l="ky" aria-pressed="true">KG</button>
+</div>
+<button id="mus" type="button" data-al="mus" aria-pressed="false" aria-label="Музыка">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg>
+</button>
+<audio id="bgm" loop preload="none" playsinline></audio>
+
+<div id="intro" role="button" tabindex="0" data-al="open" aria-label="Ачуу үчүн басыңыз">
+  <img class="bg" src="envelope.jpg" alt="" decoding="async" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()">
+  <svg class="body" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f3eadb"/><stop offset="1" stop-color="#f9f3e8"/></linearGradient>
+      <linearGradient id="gr" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#efe4d1"/><stop offset="1" stop-color="#f8f1e5"/></linearGradient>
+      <linearGradient id="gb" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#f8f2e7"/><stop offset="1" stop-color="#f2e9d8"/></linearGradient>
+    </defs>
+    <polygon points="0,0 54,0 0,100" fill="url(#gl)"/>
+    <polygon points="0,0 100,0 100,100 54,0" fill="none"/>
+    <polygon points="0,0 50,54 0,100" fill="url(#gl)"/>
+    <polygon points="100,0 50,54 100,100" fill="url(#gr)"/>
+    <polygon points="0,100 50,54 100,100" fill="url(#gb)"/>
+    <g fill="none" stroke="#d9c8a4" stroke-width="1" vector-effect="non-scaling-stroke" stroke-opacity=".8">
+      <polyline points="0,100 50,54 100,100" vector-effect="non-scaling-stroke"/>
+      <polyline points="0,0 50,54 100,0" vector-effect="non-scaling-stroke"/>
+    </g>
+  </svg>
+  <div class="flap">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="gf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fcf8f0"/><stop offset="1" stop-color="#f6eedf"/></linearGradient></defs>
+      <polygon points="0,0 100,0 50,100" fill="url(#gf)" stroke="#e4d5b7" stroke-width="1" vector-effect="non-scaling-stroke"/>
+    </svg>
+  </div>
+  <div class="letter" aria-hidden="true"><svg class="hn"><use href="#hn"/></svg><div class="lt" data-i="invite"></div><div class="ln">Айшоола</div><div class="ld" data-i="tdate"></div></div>
+  <div class="seal" aria-hidden="true">
+    <svg viewBox="0 0 100 100">
+      <defs>
+        <radialGradient id="sg" cx="34%" cy="28%" r="85%"><stop offset="0" stop-color="#f8ecc4"/><stop offset=".45" stop-color="#d8bd82"/><stop offset=".8" stop-color="#b09256"/><stop offset="1" stop-color="#8f7440"/></radialGradient>
+        <linearGradient id="sr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6d8"/><stop offset="1" stop-color="#8c7240"/></linearGradient>
+        <radialGradient id="si" cx="62%" cy="72%" r="80%"><stop offset="0" stop-color="#c2a367"/><stop offset="1" stop-color="#ead8a2"/></radialGradient>
+        <g id="brn" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M50 74c-1-14 0-28 4-42"/><path d="M50 62c-8 0-13-5-14-12 8 0 13 5 14 12zM51 52c7-1 12-6 12-13-8 1-12 6-12 13zM52 44c-6-1-10-5-10-11 7 0 10 4 10 11zM54 34c4-2 7-6 7-10-5 1-7 5-7 10z"/></g>
+      </defs>
+      <circle cx="50" cy="50" r="47" fill="url(#sg)"/>
+      <circle cx="50" cy="50" r="47" fill="none" stroke="url(#sr)" stroke-width="1.6"/>
+      <circle cx="50" cy="50" r="38" fill="url(#si)" stroke="#8c7240" stroke-opacity=".55"/>
+      <circle cx="50" cy="50" r="38" fill="none" stroke="#fff6d8" stroke-opacity=".6" stroke-width=".8" transform="translate(-.8 -.8)"/>
+      <use href="#brn" stroke="#7f6535" opacity=".55" transform="translate(1.2 1.2)"/>
+      <use href="#brn" stroke="#fff4d0"/>
+      <ellipse cx="34" cy="28" rx="15" ry="7" fill="#fff" opacity=".3" transform="rotate(-32 34 28)"/>
+    </svg>
+  </div>
+  <svg class="emb" aria-hidden="true"><use href="#hn"/></svg><svg class="embc l" aria-hidden="true"><use href="#cn"/></svg><svg class="embc r" aria-hidden="true"><use href="#cn"/></svg>
+  <div class="hint" data-i="hint">Ачуу үчүн басыңыз</div>
+</div>
+
+<section class="hero" id="hero"><div class="wrap">
+  <svg class="hn" aria-hidden="true"><use href="#hn"/></svg>
+  <figure class="bride" style="margin:0 auto 34px">
+    <div class="frame"><div class="ph"><img id="bridePhoto" alt="Айшоола" decoding="async" referrerpolicy="no-referrer" onload="this.closest('.bride').classList.add('loaded')" onerror="this.closest('.bride').remove()"></div></div>
+  </figure>
+  <div class="small" data-i="invite"></div>
+  <h1>Айшоола</h1>
+  <div class="dbox"><svg class="cn tl" aria-hidden="true"><use href="#cn"/></svg><svg class="cn tr" aria-hidden="true"><use href="#cn"/></svg><svg class="cn bl" aria-hidden="true"><use href="#cn"/></svg><svg class="cn br" aria-hidden="true"><use href="#cn"/></svg><div class="hdate" data-i="hdate"></div></div>
+</div></section>
+
+<section class="paper"><div class="wrap rv"><div class="card">
+  <svg class="cn tl" aria-hidden="true"><use href="#cn"/></svg><svg class="cn tr" aria-hidden="true"><use href="#cn"/></svg><svg class="cn bl" aria-hidden="true"><use href="#cn"/></svg><svg class="cn br" aria-hidden="true"><use href="#cn"/></svg>
+  <svg class="hn" aria-hidden="true"><use href="#hn"/></svg>
+  <h2 data-i="greet"></h2>
+  <div class="line"></div>
+  <p data-i="p1"></p>
+  <p data-i="p2"></p>
+  <p class="sign" data-i="regards"></p>
+  <div class="par">Сансызбай, Бакзада</div>
+  <svg class="hn b" aria-hidden="true"><use href="#hn"/></svg>
+</div></div></section>
+
+<section class="cdsec">
+  <div class="tphoto"><img id="timerPhoto" alt="" decoding="async" onload="this.parentNode.classList.add('loaded')" onerror="this.parentNode.remove()"></div>
+  <div class="cdbody"><div class="wrap rv">
+    <div class="small" data-i="until"></div>
+    <h2 data-i="left"></h2>
+    <div class="line"></div>
+    <div class="cd">
+      <div><b id="d">00</b><span data-i="u_d"></span></div>
+      <div><b id="h">00</b><span data-i="u_h"></span></div>
+      <div><b id="m">00</b><span data-i="u_m"></span></div>
+      <div><b id="s">00</b><span data-i="u_s"></span></div>
+    </div>
+    <div class="tdate" data-i="tdate"></div>
+  </div></div>
+</section>
+
+<section class="venue"><div class="wrap rv">
+  <div class="pin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+  <div class="small" data-i="place"></div>
+  <h2 data-i="wait"></h2>
+  <div class="vname" data-i="vname"></div>
+  <div class="vcity" data-i="vcity"></div>
+  <a class="btn gold" target="_blank" rel="noopener" data-i="map" href="https://www.google.com/maps/search/?api=1&query=%D0%A1%D1%8B%D0%B4%D1%8B%D0%BA%D0%B1%D0%BE%D0%BB%D1%83%D1%88+%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD+%D0%A2%D0%BE%D0%BA%D1%82%D0%BE%D0%B3%D1%83%D0%BB"></a>
+</div></section>
+
+<section class="prog"><div class="wrap rv">
+  <div class="small" data-i="pr_s"></div>
+  <h2 data-i="pr_h"></h2>
+  <div class="line"></div>
+  <div class="tl">
+    <div class="it"><time>16:00</time><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.6-4 3.2-6 6.5-6s5.9 2 6.5 6"/></svg></div><div><h3 data-i="a1"></h3><p data-i="b1"></p></div></div>
+    <div class="it"><time>17:30</time><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 14c-4 0-6-2.6-6-6 4 0 6 2.6 6 6z"/><path d="M12 12c0-3.6 2-6 6-6 0 3.6-2 6-6 6z"/></svg></div><div><h3 data-i="a2"></h3><p data-i="b2"></p></div></div>
+    <div class="it"><time>18:00</time><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 16.5v4M16.5 18.5h4"/></svg></div><div><h3 data-i="a3"></h3><p data-i="b3"></p></div></div>
+    <div class="it"><time>21:30</time><div class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 21V11a7.5 7.5 0 0115 0v10"/><circle cx="12" cy="11" r="2.2"/><path d="M8.5 21c.5-3 1.8-4.4 3.5-4.4s3 1.4 3.5 4.4"/></svg></div><div><h3 data-i="a4"></h3><p data-i="b4"></p></div></div></div>
+</div></section>
+
+<section class="wish"><svg class="cn tl" aria-hidden="true"><use href="#cn"/></svg><svg class="cn tr" aria-hidden="true"><use href="#cn"/></svg><svg class="cn bl" aria-hidden="true"><use href="#cn"/></svg><svg class="cn br" aria-hidden="true"><use href="#cn"/></svg><div class="wrap rv">
+  <svg class="hn" aria-hidden="true"><use href="#hn"/></svg>
+  <div class="small" data-i="w_s"></div>
+  <h2 data-i="w_h"></h2>
+  <div class="line"></div>
+  <p data-i="w_p1"></p>
+  <p data-i="w_p2"></p>
+  <div class="par">Сансызбай, Бакзада</div>
+</div></section>
+
+<section class="rsvp"><div class="wrap rv">
+  <div class="small" data-i="rs_small"></div>
+  <h2 data-i="rs_h"></h2>
+  <form id="f" novalidate>
+    <label for="n" data-i="l_name"></label>
+    <input type="text" id="n" autocomplete="name" data-ph="ph_name">
+    <label data-i="l_come"></label>
+    <div class="opts">
+      <label><input type="radio" name="r" value="Барам"><span data-i="yes"></span></label>
+      <label><input type="radio" name="r" value="Бара албайм"><span data-i="no"></span></label>
+    </div>
+    <div id="cw">
+      <label for="c" data-i="l_cnt"></label>
+      <select id="c"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option value="6+" data-i="more"></option></select>
+    </div>
+    <div id="err" role="alert"></div>
+    <div style="text-align:center"><button class="btn" type="submit" data-i="send"></button></div>
+  </form>
+  <div id="ok" data-i="ok"></div>
+</div></section>
+
+<footer>
+  <img class="fbg" src="footer.jpg" alt="" decoding="async" onerror="this.remove()">
+  <div class="heart" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#f1e3b4" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 20.5C6 16 3 12.6 3 9.2 3 6.6 5 4.8 7.3 4.8c1.8 0 3.5 1 4.7 2.8 1.2-1.8 2.9-2.8 4.7-2.8C19 4.8 21 6.6 21 9.2c0 3.4-3 6.8-9 11.3z"/></svg>
+  </div>
+  <p class="ft" data-i="foot"></p>
+</footer>
+
+<script>
+// ===== СҮРӨТТӨР / ФОТО И МУЗЫКА (в одной папке с index.html) =====
+document.getElementById("bridePhoto").src = "aishoola.jpg";
+document.getElementById("timerPhoto").src = "timer.jpg";
+
+
+var SHEET_URL = "https://script.google.com/macros/s/AKfycbzhmnl_1YlcG9QS9yDlZzZkt8W23mw59fANyGH-AWQuMjQNhJqjzDWcaWwcpe5AnsQM/exec";
+// ===== МУЗЫКА: укажите имя вашего лицензионного аудиофайла (в одной папке с index.html) =====
+var AUDIO_SRC = "music.mp3";
+var AUTOPLAY_ON_OPEN = true;   // true: музыка включается при нажатии на конверт; false: только кнопкой
+var FADE_IN = 2000, FADE_OUT = 1200, VOLUME = .7;
+var ORGANIZER = "askarbekovamantur.2008@gmail.com";
+
+// ===== ТИЛДЕР / ЯЗЫКИ =====
+var D = {
+ky:{
+ title:"Кыз узатуу — Айшоола", open:"Ачуу үчүн басыңыз", hint:"Ачуу үчүн басыңыз", mus:"Музыканы күйгүзүү / өчүрүү",
+ invite:"Кыз узатуу тоюна чакырабыз",
+ hdate:"<span>ноябрь · 2026</span><b>18</b><span>шаршемби · саат 16:00</span>",
+ greet:"Урматтуу коноктор!",
+ p1:"Сиздерди сүйүктүү кызыбыз <b>Айшооланын</b> узатуу тоюна арналган ак дасторконубуздун кадырлуу коногу болууга чакырабыз!",
+ p2:"Кызыбыздын жаңы турмушка аттанып жаткан маанилүү күнүндө кубанычыбызды тең бөлүшүп, ак батаңызды берип, төрүбүздүн көркүн ачып кетсеңиздер биз үчүн чоң сыймык болот.",
+ regards:"Урматтоо менен,",
+ until:"Биздин тойго чейин", left:"Калды", u_d:"күн", u_h:"саат", u_m:"мүнөт", u_s:"секунд",
+ tdate:"18-ноябрь 2026 · саат 16:00",
+ place:"Той өтүүчү жай", wait:"Сиздерди ушул жерден күтөбүз", vname:"Сыдыкболуш рестораны", vcity:"Токтогул шаары", map:"Картадан көрүү",
+ pr_s:"Той программасы", pr_h:"Тойдун жүрүшү",
+ a1:"Конокторду тосуп алуу", b1:"Туугандарды жана жакындарды тосуп алып, эстелик сүрөткө түшөбүз.",
+ a2:"Улуулардын батасы", b2:"Той башталардан мурун аксакалдардын ак батасын жана жылуу каалоолорун угабыз.",
+ a3:"Той дасторкону", b3:"Куттуктоолор, ырлар, музыка жана кыргыздын кооз каада-салттары.",
+ a4:"Кызды узатуу", b4:"Кызды узатуу жөрөлгөсү, ак тилектер жана жаңы турмушка ак жол каалоо.",
+ w_s:"Ата-энеден", w_h:"Ыраазычылык",
+ w_p1:"Кымбаттуу коноктор! Кызыбыздын бактылуу күнүндө биздин жаныбызда болуп, кубанычыбызды бөлүшүп жатканыңыз үчүн чын жүрөктөн ыраазычылык билдиребиз.",
+ w_p2:"Сиздердин ак баталарыңыз, жылуу сөздөрүңүз жана келгениңиздин өзү биз үчүн эң чоң бакыт. Үйүңүздөн ыракат, дасторконуңуздан береке кетпесин!",
+ rs_small:"Келериңизди билдирип коюңуз", rs_h:"Биз менен бирге болосузбу?",
+ l_name:"Сиздин атыңыз (аты-жөнү)", ph_name:"Мисалы: Асанов Азамат",
+ l_come:"Тойго келе аласызбы?", yes:"Кубануу менен барам", no:"Тилекке каршы, бара албайм",
+ l_cnt:"Канча адам келесиз? (өзүңүздү кошкондо)", more:"5тен көп", send:"Жоопту жөнөтүү",
+ ok:"Жообуңуз кабыл алынды, рахмат!", foot:"Сиздерди чыдамсыздык менен күтөбүз!",
+ e_name:"Сураныч, аты-жөнүңүздү жазыңыз.", e_choice:"Сураныч, «Барам» же «Бара албайм» деп тандаңыз.", e_send:"Жөнөтүү болбой калды, кайра аракет кылыңыз.",
+ m_subj:"Той чакыруусуна жооп: ", m_name:"Аты-жөнү: ", m_ans:"Жооп: ", m_cnt:"Адам саны: "
+},
+ru:{
+ title:"Кыз узатуу — Айшоола", open:"Нажмите, чтобы открыть", hint:"Нажмите, чтобы открыть", mus:"Включить / выключить музыку",
+ invite:"Приглашаем на «Кыз узатуу»",
+ hdate:"<span>ноября · 2026</span><b>18</b><span>среда · 16:00</span>",
+ greet:"Уважаемые гости!",
+ p1:"Приглашаем вас стать почётными гостями нашего праздничного дастархана по случаю проводов нашей любимой дочери <b>Айшоолы</b>!",
+ p2:"В этот важный день, когда наша дочь отправляется в новую жизнь, мы будем рады разделить с вами нашу радость. Ваше благословение и присутствие станут для нас большой честью.",
+ regards:"С уважением,",
+ until:"До нашего торжества", left:"Осталось", u_d:"дней", u_h:"часов", u_m:"минут", u_s:"секунд",
+ tdate:"18 ноября 2026 · 16:00",
+ place:"Место проведения", wait:"Ждём вас здесь", vname:"Ресторан «Сыдыкболуш»", vcity:"город Токтогул", map:"Открыть на карте",
+ pr_s:"Программа торжества", pr_h:"Ход праздника",
+ a1:"Встреча гостей", b1:"Встречаем родных и близких и делаем фотографии на память.",
+ a2:"Благословение старших", b2:"Перед началом торжества принимаем благословение аксакалов и тёплые пожелания.",
+ a3:"Праздничный дастархан", b3:"Поздравления, песни, музыка и красивые кыргызские традиции.",
+ a4:"Проводы невесты", b4:"Церемония проводов, добрые пожелания и напутствие в новую семью.",
+ w_s:"От родителей", w_h:"С благодарностью",
+ w_p1:"Дорогие гости! От всего сердца благодарим вас за то, что в этот счастливый день для нашей дочери вы рядом с нами и делите нашу радость.",
+ w_p2:"Ваши благословения, добрые слова и само ваше присутствие — для нас величайший подарок. Пусть в ваших домах всегда царят тепло и достаток!",
+ rs_small:"Сообщите о своём приходе", rs_h:"Будете ли вы с нами?",
+ l_name:"Ваше имя и фамилия", ph_name:"Например: Асанов Азамат",
+ l_come:"Сможете ли вы прийти?", yes:"С радостью приду", no:"К сожалению, не смогу",
+ l_cnt:"Сколько человек придёт? (включая вас)", more:"Больше 5", send:"Отправить ответ",
+ ok:"Ваш ответ принят, спасибо!", foot:"С нетерпением ждём вас!",
+ e_name:"Пожалуйста, напишите ваше имя и фамилию.", e_choice:"Пожалуйста, выберите «Приду» или «Не смогу».", e_send:"Не удалось отправить, попробуйте ещё раз.",
+ m_subj:"Ответ на приглашение: ", m_name:"Имя: ", m_ans:"Ответ: ", m_cnt:"Количество гостей: "
+}};
+var L = "ky", errKey = "";
+try { var sv = localStorage.getItem("lang"); if (sv === "ru" || sv === "ky") L = sv; } catch(e){}
+
+function applyLang(){
+  var t = D[L];
+  document.documentElement.lang = L;
+  document.title = t.title;
+  document.querySelectorAll("[data-i]").forEach(function(el){ el.innerHTML = t[el.getAttribute("data-i")]; });
+  document.querySelectorAll("[data-ph]").forEach(function(el){ el.placeholder = t[el.getAttribute("data-ph")]; });
+  document.querySelectorAll("[data-al]").forEach(function(el){ el.setAttribute("aria-label", t[el.getAttribute("data-al")]); });
+  document.querySelectorAll("#lang button").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-l") === L ? "true" : "false"); });
+  document.getElementById("err").textContent = errKey ? t[errKey] : "";
+}
+document.getElementById("lang").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if (!b) return;
+  L = b.getAttribute("data-l");
+  try { localStorage.setItem("lang", L); } catch(err){}
+  applyLang();
+});
+applyLang();
+
+
+// ===== Музыка: один <audio>, плавный старт и остановка =====
+function createMusic(){
+  var bgm = document.getElementById("bgm"), btn = document.getElementById("mus");
+  var want = false, raf = 0, loaded = false, wasPlaying = false;
+  function ui(on){ btn.classList.toggle("playing", on); btn.setAttribute("aria-pressed", on ? "true" : "false"); }
+  function fade(to, ms, cb){
+    cancelAnimationFrame(raf);
+    var from = bgm.volume, t0 = performance.now();
+    (function step(now){
+      var k = Math.min(1, (now - t0) / ms);
+      bgm.volume = Math.max(0, Math.min(1, from + (to - from) * k));
+      if (k < 1) raf = requestAnimationFrame(step); else if (cb) cb();
+    })(t0);
+  }
+  function start(){
+    if (want) return;                       // уже играет: второй поток не создаётся
+    want = true; ui(true);
+    if (!loaded){ bgm.src = AUDIO_SRC; loaded = true; }
+    bgm.volume = 0;
+    var pr = bgm.play();
+    if (pr && pr.catch) pr.catch(function(){ want = false; ui(false); });
+    fade(VOLUME, FADE_IN);
+  }
+  function stop(){
+    if (!want) return;
+    want = false; ui(false);
+    fade(0, FADE_OUT, function(){ if (!want) bgm.pause(); });
+  }
+  bgm.addEventListener("error", function(){ want = false; ui(false); });
+  btn.addEventListener("click", function(e){ e.stopPropagation(); want ? stop() : start(); });
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden){ wasPlaying = want; if (want){ want = false; cancelAnimationFrame(raf); bgm.pause(); } }
+    else if (wasPlaying){ wasPlaying = false; start(); }
+  });
+  return {start:start, stop:stop};
+}
+
+// ===== Конверт: открытие =====
+(function(){
+  var it = document.getElementById("intro"), b = document.body, h = document.documentElement, opened = false;
+  var m = createMusic();
+  h.classList.add("locked"); b.classList.add("pre");
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  window.scrollTo(0, 0);
+  it.addEventListener("touchmove", function(e){ if(!opened) e.preventDefault(); }, {passive:false});
+  function open(){
+    if (opened) return; opened = true;
+    if (AUTOPLAY_ON_OPEN) m.start();
+    it.classList.add("open");
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var img = it.classList.contains("has-img");
+    setTimeout(function(){ b.classList.add("reveal"); b.classList.remove("pre"); }, reduce ? 0 : (img ? 250 : 1300));
+    setTimeout(function(){
+      it.parentNode && it.parentNode.removeChild(it);
+      h.classList.remove("locked");
+      window.scrollTo(0, 0);
+    }, reduce ? 50 : (img ? 1200 : 2250));
+  }
+  it.addEventListener("click", open);
+  it.addEventListener("keydown", function(e){ if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+})();
+
+// ===== Плавное появление блоков =====
+(function(){
+  var els = document.querySelectorAll(".rv,.tphoto,.fin,.wish");
+  if (!("IntersectionObserver" in window)){ document.documentElement.classList.add("nojs"); return; }
+  var io = new IntersectionObserver(function(en){
+    en.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, {threshold:.15});
+  els.forEach(function(e){ io.observe(e); });
+})();
+
+// возврат на страницу из кэша браузера: конверт показывается заново
+window.addEventListener("pageshow", function(e){ if (e.persisted) location.reload(); });
+
+// ===== Таймер =====
+var T = new Date("2026-11-18T16:00:00+06:00").getTime();
+function p(x){return String(x).padStart(2,"0")}
+function set(id, v){ var el = document.getElementById(id); if (el.textContent !== v){ el.textContent = v; el.classList.remove("flip"); void el.offsetWidth; el.classList.add("flip"); } }
+function tick(){
+  var l = Math.max(0, T - Date.now()), s = Math.floor(l/1000);
+  set("d", p(Math.floor(s/86400))); set("h", p(Math.floor(s%86400/3600)));
+  set("m", p(Math.floor(s%3600/60))); set("s", p(s%60));
+}
+tick(); setInterval(tick, 1000);
+
+// ===== Форма =====
+var f = document.getElementById("f"), cw = document.getElementById("cw");
+function showErr(k){ errKey = k; document.getElementById("err").textContent = k ? D[L][k] : ""; }
+f.addEventListener("change", function(){
+  var r = f.querySelector("input[name=r]:checked");
+  cw.style.display = (r && r.value === "Бара албайм") ? "none" : "block";
+});
+f.addEventListener("submit", function(e){
+  e.preventDefault();
+  var name = document.getElementById("n").value.trim();
+  var r = f.querySelector("input[name=r]:checked");
+  if(!name){ showErr("e_name"); return; }
+  if(!r){ showErr("e_choice"); return; }
+  showErr("");
+  var cnt = r.value === "Барам" ? document.getElementById("c").value : "0";
+  var data = {name: name, answer: r.value, count: cnt}; // в таблицу всегда одинаковые значения
+  function done(){ f.style.display = "none"; document.getElementById("ok").style.display = "block"; }
+  if(SHEET_URL){
+    fetch(SHEET_URL, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"}, body: JSON.stringify(data)})
+      .then(done).catch(function(){ showErr("e_send"); });
+  } else {
+    var t = D[L];
+    var body = t.m_name + name + "\n" + t.m_ans + r.value + "\n" + t.m_cnt + cnt;
+    location.href = "mailto:" + ORGANIZER + "?subject=" + encodeURIComponent(t.m_subj + name) + "&body=" + encodeURIComponent(body);
+    done();
+  }
+});
+</script>
+</body>
+</html>
